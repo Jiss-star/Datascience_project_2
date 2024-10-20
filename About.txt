@@ -1,0 +1,87 @@
+This dataset provides data on a milling machine and is modeled synthetically after real-world machine processes. It includes detailed features about machine operation, product quality, temperatures, mechanical properties like torque and speed, and various failure modes that affect the machine’s operation. 
+
+This dataset contains 10,000 data points, with each data point representing a snapshot of the milling machine during operation. The data is organized in rows (representing each point in time) and columns (representing different features or characteristics).
+
+2. Features (Columns):
+
+2.1 UID:
+This is a unique identifier ranging from 1 to 10,000. You can think of it like a ticket number assigned to each process instance, making it easy to refer to any specific row of data.
+
+2.2 Product ID:
+The Product ID consists of:
+
+A letter (L, M, or H) representing the product quality:
+L for Low quality (50% of the data points),
+M for Medium quality (30%),
+H for High quality (20%).
+It also includes a serial number that is specific to each product variant (e.g., "L001", "M123").
+
+2.3 Type:
+The Type column is essentially a shorthand for the Product ID's quality category (L, M, H) without the serial number.
+
+2.4 Air Temperature [K]:
+The air temperature is in Kelvin (K), which is an absolute temperature scale used in science and engineering.
+
+Random walk process: Imagine this like a drunk person stumbling randomly in different directions, but instead of moving on a street, this random movement happens in the temperature value. The temperature changes gradually with random small increments or decrements.
+
+Normalization: The air temperature data is centered around 300 K (which is around room temperature, 27°C), with a standard deviation of 2 K. This means most air temperature values will be close to 300 K, but can vary slightly in a normal, bell-shaped distribution. This means most air temperature values will be close to 300 K, but can vary slightly in a normal, bell-shaped distribution.
+
+2.5 Process Temperature [K]:
+The process temperature is the temperature of the system during the machine operation, which is slightly higher than the air temperature.
+
+It's modeled similarly to air temperature but with a smaller deviation (1 K).
+In this dataset, the process temperature = air temperature + 10 K plus some small random fluctuations. This makes the process temperature typically higher than the surrounding air temperature, as expected when machinery is running.
+
+2.6 Rotational Speed [rpm]:
+This is the speed at which the tool is rotating, measured in revolutions per minute (rpm).
+
+The speed is derived based on a fixed power value of 2860 W, and then some noise (random fluctuations) is added to simulate real-world variability.
+Think of a fan running at a fixed speed, but due to slight power fluctuations, the fan speed might wobble slightly. That’s what this noise represents.
+
+2.7 Torque [Nm]:
+Torque is a measure of the rotational force applied by the milling tool, in Newton meters (Nm).
+
+It’s modeled as a normal distribution centered around 40 Nm, with a standard deviation of 10 Nm. So, most torque values will be between 30 and 50 Nm, with some values falling outside this range.
+Imagine turning a wrench with varying levels of force. The torque is how much twisting force is being applied at any given time.
+
+.8 Tool Wear [min]:
+The tool wear is the amount of wear-and-tear the tool experiences, measured in minutes.
+
+The wear rate depends on the product quality:
+L (Low): adds 2 minutes of wear per cycle,
+M (Medium): adds 3 minutes,
+H (High): adds 5 minutes.
+Think of it like using a kitchen knife. The higher-quality knife (H) will experience more use (5 minutes), while a lower-quality one (L) wears out faster with less use (2 minutes).
+
+3. Machine Failure and Failure Modes:
+
+3.1 Tool Wear Failure (TWF):
+Tool wear failure happens when the tool reaches a wear time between 200 to 240 minutes. Out of the 120 failure events, 69 times the tool is replaced, and 51 times the tool fails.
+Imagine using a pencil until it’s too short to hold. Sometimes, you sharpen it (replace it), but other times it might snap in the middle of use (failure).
+
+3.2 Heat Dissipation Failure (HDF):
+Heat dissipation failure occurs when:
+The difference between air and process temperatures is less than 8.6 K (meaning not enough heat is escaping),
+AND the rotational speed is below 1380 rpm.
+Think of a car engine. If the engine doesn’t cool down enough (small temperature difference) and runs too slowly (low rpm), it overheats and shuts down.
+
+3.3 Power Failure (PWF):
+A power failure happens if the machine’s power output (calculated from torque and rotational speed) is:
+Below 3500 W or above 9000 W.
+The power is calculated as torque × rotational speed (with rotational speed converted into radians per second). If the power falls outside the safe range, the machine fails.
+Imagine a blender running at either too low power (doesn’t blend anything) or too high (overheats and shuts off).
+
+3.4 Overstrain Failure (OSF):
+Overstrain failure occurs when the product of tool wear and torque exceeds a certain threshold:
+11,000 minNm for Low-quality (L),
+12,000 minNm for Medium-quality (M),
+13,000 minNm for High-quality (H).
+Overstrain happens when the machine is pushed beyond its mechanical limits. It’s like trying to cut through something too tough for a worn-out knife – the knife will break.
+
+3.5 Random Failures (RNF):
+Random failures are purely chance-based, with each process having a 0.1% chance of failure, regardless of the conditions.
+Imagine flipping a coin. Every so often, the machine fails even though everything seems fine, just by pure bad luck. Only 5 random failures occur in the dataset.
+
+
+If any of these failure modes occur, the machine failure label is set to 1 (indicating a failure). This label doesn’t tell which specific failure mode occurred, 
+only that a failure happened
